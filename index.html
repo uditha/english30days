@@ -70,7 +70,11 @@
   .card-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
   .sentence-list { list-style: none; }
   .sentence-list li { padding: 10px 0; border-bottom: 0.5px solid var(--border-light); font-size: 15px; color: var(--text-primary); line-height: 1.5; display: flex; align-items: flex-start; gap: 10px; }
+  .sentence-list li .sentence-text { flex: 1; min-width: 0; }
   .sentence-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .speak-btn { width: 32px; height: 32px; border: none; background: var(--blue-light); color: var(--blue-dark); border-radius: 50%; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+  .speak-btn:hover { background: var(--blue); color: white; transform: scale(1.05); }
+  .speak-btn:active { transform: scale(0.95); }
   .prompt-words { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .prompt-word { font-size: 12px; color: var(--blue-dark); background: var(--blue-light); padding: 4px 10px; border-radius: 99px; font-weight: 500; }
   .sentence-num { font-size: 12px; color: var(--text-tertiary); min-width: 20px; margin-top: 2px; flex-shrink: 0; }
@@ -207,9 +211,9 @@ function renderToday() {
     <div class="tip-box">💡 ${day.tip}</div>
     <div class="card">
       <div class="card-title">Today's sentences — practise these</div>
-      <p style="font-size:12px;color:var(--text-tertiary);margin-bottom:10px;">Use the words below each sentence to build your own — try new combinations!</p>
+      <p style="font-size:12px;color:var(--text-tertiary);margin-bottom:10px;">Tap 🔊 to hear each sentence. Use the words below to build your own!</p>
       <ul class="sentence-list">
-        ${day.sentences.map((s,i)=>`<li><span class="sentence-num">${i+1}</span><div><div>${s}</div>${day.promptWords && day.promptWords[i] ? `<div class="prompt-words">${day.promptWords[i].map(w=>`<span class="prompt-word">${w}</span>`).join('')}</div>` : ''}</div></li>`).join('')}
+        ${day.sentences.map((s,i)=>`<li><span class="sentence-num">${i+1}</span><div class="sentence-text"><div>${s}</div>${day.promptWords && day.promptWords[i] ? `<div class="prompt-words">${day.promptWords[i].map(w=>`<span class="prompt-word">${w}</span>`).join('')}</div>` : ''}</div><button class="speak-btn" onclick="speakSentence(${d},${i})" title="Play audio">🔊</button></li>`).join('')}
       </ul>
     </div>
     <div class="card">
@@ -245,6 +249,17 @@ function renderToday() {
   updateHeader();
 }
 
+function speakSentence(dayIdx, sentIdx) {
+  const text = DAYS[dayIdx].sentences[sentIdx];
+  if (!text) return;
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+  }
+}
 function toggleCheck(key,el) { state.checkboxes[key]=!state.checkboxes[key]; el.classList.toggle('done',state.checkboxes[key]); save(); }
 function toggleVocab(key,el) { state.learnedVocab[key]=!state.learnedVocab[key]; el.classList.toggle('learned',state.learnedVocab[key]); save(); }
 function changeDay(d) { state.selectedDay=d; save(); renderToday(); }
