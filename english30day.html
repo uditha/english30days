@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>30-Day English Mastery</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f5f0;
+    --bg-tertiary: #eeede8;
+    --text-primary: #1a1a18;
+    --text-secondary: #6b6b66;
+    --text-tertiary: #9b9b96;
+    --border-light: rgba(0,0,0,0.1);
+    --border-mid: rgba(0,0,0,0.18);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --green-dark: #085041;
+    --blue: #378ADD;
+    --blue-light: #E6F1FB;
+    --blue-dark: #042C53;
+    --amber-light: #FAEEDA;
+    --amber-dark: #633806;
+    --coral-light: #FAECE7;
+    --coral-dark: #993C1D;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1e1e1c;
+      --bg-secondary: #2a2a28;
+      --bg-tertiary: #232321;
+      --text-primary: #f0efe8;
+      --text-secondary: #a0a09a;
+      --text-tertiary: #6a6a65;
+      --border-light: rgba(255,255,255,0.1);
+      --border-mid: rgba(255,255,255,0.18);
+      --green-light: #0a3d2a;
+      --green-dark: #9FE1CB;
+      --blue-light: #0c2d4a;
+      --blue-dark: #B5D4F4;
+      --amber-light: #3a2a0a;
+      --amber-dark: #FAC775;
+      --coral-light: #3a1a0a;
+      --coral-dark: #F5C4B3;
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-tertiary); color: var(--text-primary); min-height: 100vh; }
+  .app { max-width: 680px; margin: 0 auto; padding: 1rem; }
+  .header { text-align: center; padding: 1.5rem 0 1rem; border-bottom: 0.5px solid var(--border-light); margin-bottom: 1.5rem; }
+  .header h1 { font-size: 22px; font-weight: 600; color: var(--text-primary); }
+  .header p { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+  .streak-flame { font-size: 32px; margin-bottom: 6px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; background: var(--bg-secondary); border-radius: var(--radius-md); padding: 4px; }
+  .tab { flex: 1; padding: 8px 4px; font-size: 13px; font-weight: 500; border: none; background: transparent; color: var(--text-secondary); border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+  .tab.active { background: var(--bg-primary); color: var(--text-primary); border: 0.5px solid var(--border-light); }
+  .section { display: none; }
+  .section.active { display: block; }
+  .day-grid { display: grid; grid-template-columns: repeat(7, minmax(0,1fr)); gap: 6px; margin-bottom: 1.5rem; }
+  .day-btn { aspect-ratio:1; border: 0.5px solid var(--border-light); background: var(--bg-primary); border-radius: var(--radius-md); cursor: pointer; font-size: 12px; font-weight: 500; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: all 0.15s; }
+  .day-btn:hover { border-color: var(--border-mid); color: var(--text-primary); }
+  .day-btn.completed { background: var(--green-light); border-color: #5DCAA5; color: var(--green-dark); }
+  .day-btn.selected { border: 2px solid var(--blue); color: var(--blue-dark); background: var(--blue-light); }
+  .day-btn .tick { font-size: 10px; }
+  .week-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; margin-top: 8px; }
+  .card { background: var(--bg-primary); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .card-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .sentence-list { list-style: none; }
+  .sentence-list li { padding: 10px 0; border-bottom: 0.5px solid var(--border-light); font-size: 15px; color: var(--text-primary); line-height: 1.5; display: flex; align-items: flex-start; gap: 10px; }
+  .sentence-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .sentence-num { font-size: 12px; color: var(--text-tertiary); min-width: 20px; margin-top: 2px; flex-shrink: 0; }
+  .activity { padding: 10px 0; border-bottom: 0.5px solid var(--border-light); }
+  .activity:last-child { border-bottom: none; }
+  .activity-row { display: flex; align-items: flex-start; gap: 10px; }
+  .activity-check { width: 20px; height: 20px; border: 0.5px solid var(--border-mid); border-radius: 5px; cursor: pointer; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; background: var(--bg-primary); transition: all 0.15s; }
+  .activity-check.done { background: var(--green); border-color: var(--green); }
+  .activity-check.done::after { content:''; display:block; width:5px; height:9px; border:2px solid white; border-top:none; border-left:none; transform:rotate(45deg) translate(-1px,-1px); }
+  .activity-text { font-size: 14px; color: var(--text-primary); line-height: 1.6; }
+  .quote-box { background: var(--bg-secondary); border-left: 3px solid var(--blue); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: 12px 16px; margin-bottom: 1rem; }
+  .quote-box p { font-size: 14px; color: var(--text-primary); line-height: 1.6; font-style: italic; }
+  .quote-box span { font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: block; }
+  .progress-bar-wrap { background: var(--bg-secondary); border-radius: 99px; height: 8px; margin: 6px 0; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--green); border-radius: 99px; transition: width 0.4s; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 1rem; }
+  .stat-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 14px; text-align: center; }
+  .stat-num { font-size: 26px; font-weight: 600; color: var(--text-primary); }
+  .stat-label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 0.5px solid var(--border-mid); border-radius: var(--radius-md); background: transparent; color: var(--text-primary); font-size: 14px; cursor: pointer; transition: all 0.15s; }
+  .btn:hover { background: var(--bg-secondary); }
+  .btn:active { transform: scale(0.98); }
+  .family-card { background: var(--green-light); border: 0.5px solid #5DCAA5; border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .family-card .card-title { color: #0F6E56; }
+  .tip-box { background: var(--amber-light); border: 0.5px solid #EF9F27; border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 1rem; font-size: 13px; color: var(--amber-dark); line-height: 1.6; }
+  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+  .day-title { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+  .day-subtitle { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .week-badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 99px; font-weight: 600; }
+  .w1 { background: var(--blue-light); color: #185FA5; }
+  .w2 { background: var(--green-light); color: #0F6E56; }
+  .w3 { background: var(--amber-light); color: #854F0B; }
+  .w4 { background: var(--coral-light); color: var(--coral-dark); }
+  .complete-day-btn { width: 100%; padding: 14px; font-size: 15px; font-weight: 600; border: none; border-radius: var(--radius-lg); background: var(--green); color: white; cursor: pointer; transition: all 0.15s; margin-top: 0.5rem; }
+  .complete-day-btn:hover { background: #0F6E56; }
+  .complete-day-btn:disabled { background: var(--bg-secondary); color: var(--text-tertiary); cursor: default; }
+  .vocab-pill { display: inline-block; background: var(--bg-secondary); border: 0.5px solid var(--border-light); border-radius: 99px; padding: 5px 13px; font-size: 13px; margin: 3px; color: var(--text-primary); cursor: pointer; transition: all 0.15s; }
+  .vocab-pill:hover { border-color: var(--border-mid); }
+  .vocab-pill.learned { background: var(--green-light); border-color: #5DCAA5; color: var(--green-dark); }
+  .nav-arrows { display: flex; gap: 6px; align-items: center; }
+  .week-section { margin-bottom: 8px; }
+  @media (max-width: 480px) {
+    .app { padding: 0.75rem; }
+    .day-btn { font-size: 11px; }
+    .stats-row { gap: 6px; }
+    .stat-num { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="streak-flame" id="streakFlame">🔥</div>
+    <h1>30-Day English Mastery</h1>
+    <p id="headerSub">Your personal daily coach — real English, every day</p>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('today')">Today</button>
+    <button class="tab" onclick="showTab('calendar')">30 Days</button>
+    <button class="tab" onclick="showTab('progress')">Progress</button>
+    <button class="tab" onclick="showTab('family')">Family</button>
+  </div>
+  <div id="today" class="section active"></div>
+  <div id="calendar" class="section"></div>
+  <div id="progress" class="section"></div>
+  <div id="family" class="section"></div>
+</div>
+
+<script>
+const DAYS = [
+  { week:1, focus:"Opening & starting conversations", sentences:["Before anything else, let me make sure I understand the situation.","The way I see it, the real issue underneath all this is…","What strikes me most about this is…","Let me make sure we're on the same page.","I'd like to set the tone for this conversation early."], activities:["Say all 5 sentences aloud 3 times in front of a mirror","Describe your morning in 5 full English sentences — write in your notes app","Use one sentence when talking to your wife at dinner tonight","Play 'describe the room' — say 10 things you see around you in English"], family:"Sit together after dinner. Each person says 3 things they noticed today in English. Let the kids go first — encourage them warmly.", vocab:["foundation","situation","conversation","perspective","understand"], tip:"Start with the mirror. It feels silly. Do it anyway. That discomfort is growth." },
+  { week:1, focus:"Expressing your opinion confidently", sentences:["From where I stand, the key issue here is…","I see merit in both sides, but I lean toward…","I could be wrong, but my read on this is…","My instinct says one thing, but the evidence points to another.","I'd argue that the conventional wisdom on this is incomplete."], activities:["Write your opinion on any topic in 5 full sentences","Say your opinion about today's weather, food, or news — out loud","Use 'from where I stand' in a real conversation today","Record a 60-second voice note about your day — in English"], family:"Opinion game: ask everyone — what's your favourite season and WHY? Must answer in 2 full English sentences each.", vocab:["opinion","instinct","evidence","perspective","lean toward"], tip:"Opinions don't need to be right. They need to be expressed. Practice expressing, not perfecting." },
+  { week:1, focus:"Buying time & thinking out loud", sentences:["Let me make sure I understand what you're asking.","That's worth thinking through carefully before I respond.","Give me a moment — I want to give you a proper answer.","I'm still forming my thoughts on this, but here's where I am…","Let me think through the implications of that."], activities:["Next time someone asks you anything — use a buying-time sentence before answering","Write 5 sentences about something you're thinking about right now","Say the sentences while making tea or coffee — use that quiet time","Text someone in English today — one full, proper message"], family:"Ask your kids: what was the best part of your day? Use a thinking sentence before you respond to their questions.", vocab:["implication","response","thoughtful","moment","consider"], tip:"Pausing before you speak is not weakness. It is intelligence. These sentences make the pause look powerful." },
+  { week:1, focus:"Agreeing smartly", sentences:["You've put into words something I couldn't quite articulate.","That aligns exactly with what I've been observing.","I think you've identified the crux of it.","Not only do I agree — I think the implications go even deeper.","That reframes the issue in a way I find very convincing."], activities:["When you agree with anyone today — use one of these instead of just 'yes'","Write 3 things you agree with and explain WHY in full sentences","Practise all 5 sentences aloud — record yourself and listen back","Send a WhatsApp message agreeing with someone using a proper full sentence"], family:"Play agree-disagree. Make 3 statements — everyone says if they agree and must explain in English. Eg: 'Pizza is better than rice.'", vocab:["articulate","crux","convincing","reframe","align"], tip:"Saying 'I agree' is a missed opportunity. These sentences show HOW you think, not just WHAT you think." },
+  { week:1, focus:"Disagreeing with class", sentences:["I respect that view, though I see it differently.","I'd gently challenge that assumption.","My concern is that we're treating a symptom, not the cause.","I think the logic holds, but the premise is shaky.","With the greatest respect, I think that conclusion is premature."], activities:["Disagree with something today — use one of these sentences","Write a paragraph disagreeing with something you read or saw","Say all 5 sentences with a calm, confident tone — record it","In your head, disagree with any advertisement you see today — form the full sentence"], family:"Debate night! Pick a fun topic (eg: cats vs dogs, summer vs winter). Kids vs parents. Everyone must disagree politely in English.", vocab:["assumption","premise","respectfully","challenge","symptom"], tip:"Disagreeing well is one of the most powerful communication skills. Most people either stay silent or get angry. You will do neither." },
+  { week:1, focus:"Asking sharp questions", sentences:["What's the evidence that this is actually true?","What are we not talking about that we should be?","What would change your mind about this?","Is this a problem we need to solve, or one we need to accept?","What are we optimising for, exactly?"], activities:["Ask one sharp question today — in any conversation","Write 5 questions about something you're genuinely curious about","Practise questions with rising intonation — they must sound like questions","Journal entry: write 3 questions you'd want answered about your own life"], family:"Question circle — each person asks ONE question the whole family must try to answer. Kids love this. Let them go first.", vocab:["evidence","optimise","curious","relevant","solve"], tip:"The quality of your questions reveals the quality of your thinking. Sharp questions open doors that statements never could." },
+  { week:1, focus:"Week 1 review & fluency day", sentences:["I've come away from this with a clearer head — I hope you have too.","Let's land this conversation with something actionable.","This was a productive conversation. Let's not lose momentum.","I'll send a brief summary so we're both working from the same notes.","The goal isn't to be right — it's to get it right."], activities:["Review all sentences from Week 1 — say each one aloud","Pick your TOP 5 favourite sentences and write them on paper","Use 3 different sentences in real conversations today","Write a full paragraph about your Week 1 experience — in English"], family:"Family English dinner — for 15 minutes, try to speak only English at the dinner table. Whoever slips gets a funny forfeit!", vocab:["productive","momentum","actionable","summary","clarity"], tip:"You have completed 7 days. Most people quit before this. You didn't. That already makes you different." },
+  { week:2, focus:"Describing people and emotions", sentences:["The man across from me seems lost in thought.","There's something deeply calming about this moment.","She carries herself with quiet confidence.","There's a tension here that I haven't quite resolved yet.","I can see this matters a great deal to you."], activities:["Describe 3 people you see today in full English sentences — in your head or notes","Write how you feel right now in 5 honest sentences","People-watch for 5 minutes — describe expressions and body language","Use an emotional sentence with your wife or kids today — make it real"], family:"Feelings check-in. At bedtime, everyone shares one feeling from the day in English — must be a full sentence, not just one word.", vocab:["emotion","confident","tension","observe","express"], tip:"Describing people and emotions is where English truly comes alive. This is the language of real human connection." },
+  { week:2, focus:"Describing places and environment", sentences:["The landscape is rushing past at incredible speed.","The sky looks overcast — it might rain later.","The rhythmic clatter of the wheels is almost hypnotic.","There's a low hum of conversation in the background.","There is a strange peace in being in motion without any effort."], activities:["Step outside and describe everything you see in 10 sentences","Describe your home room by room — out loud or written","On any journey today — describe what you pass through in English","Write a short postcard in English about where you live"], family:"Go for a short walk together. Each person must point at 5 things and say a full English sentence about it.", vocab:["landscape","atmosphere","surroundings","describe","observe"], tip:"Your environment is your classroom. Every journey, every room, every view is material for practice." },
+  { week:2, focus:"Storytelling — past events", sentences:["It started when I noticed something unusual about…","The moment I realised that was when…","Looking back, I think the turning point was…","At the time I didn't fully understand, but now I can see that…","It wasn't what happened — it was how it happened that mattered."], activities:["Tell the story of your day out loud, alone, as if talking to a close friend","Write the story of how you met your wife — in English","Tell one childhood memory to yourself in English — full story, all details","Voice note: record a 90-second story about anything that happened this week"], family:"Story time — each family member tells a 2-minute story about their funniest or best memory. In English. Clap for effort, not perfection.", vocab:["turning point","realise","memory","moment","reflect"], tip:"Stories are the oldest form of human learning. When you tell stories in English, you become fluent faster than any other method." },
+  { week:2, focus:"Talking about the future & plans", sentences:["The way I see it, the road ahead requires…","I've been giving this some thought, and here's where I'm heading…","My plan, as it stands, is to…","If everything goes as expected, I should…","I want to be honest about what I'm hoping to achieve."], activities:["Write your goals for the next 3 months in English — at least 10 sentences","Talk out loud about your plans for next week — as if to a friend","Describe your dream day in English — full vivid detail","Use a future sentence with a family member today — make it real"], family:"Dream board talk — ask everyone: where do we want to go on holiday? What do you want to learn this year? All in English.", vocab:["achieve","expectation","intention","direction","future"], tip:"Speaking about your future in English makes it more real. Language shapes thought. Thought shapes action." },
+  { week:2, focus:"Persuasion and influence", sentences:["Let me make the case for this as clearly as I can.","The evidence points in one direction pretty strongly.","I'm not asking you to agree — just to keep an open mind.","Consider the alternative — what happens if we don't?","I'd ask you to sit with this idea before dismissing it."], activities:["Persuade someone of anything today using a proper English sentence","Write a persuasive paragraph about something you genuinely believe in","Practise the 5 sentences with confident body language in the mirror","Watch a 3-minute TED talk — note ONE persuasive phrase they use"], family:"Persuasion game — each person must convince the family of something silly (eg: we should get a dog / ice cream for breakfast). In English!", vocab:["persuade","convince","evidence","argument","compelling"], tip:"Persuasion is not manipulation. It is communicating clearly enough that others can genuinely consider your point of view." },
+  { week:2, focus:"Handling difficult conversations", sentences:["I want to resolve this, not win an argument.","I'd rather surface this tension now than let it fester.","I'm not here to assign blame — I'm here to fix the problem.","Let's separate the issue from the emotion for a moment.","I want to make sure you feel heard before I respond."], activities:["Think of one real difficult conversation — write how you'd handle it in English","Practise staying calm while saying these sentences out loud","Write a letter you'll never send — address something difficult — in English","Reflect: when do you find English hardest? Write about it honestly."], family:"Discuss one family rule or decision — in English. Practise listening without interrupting. Then respond using a proper sentence.", vocab:["resolve","tension","blame","emotion","communicate"], tip:"The ability to have difficult conversations with grace is one of the rarest and most valuable skills in any language." },
+  { week:2, focus:"Week 2 review — expression mastery", sentences:["The pattern I keep noticing is…","There's a nuance here that deserves attention.","I've independently arrived at a similar conclusion.","Strong opinions, loosely held.","Say less, mean more."], activities:["Read your journal entries from Week 2 — count how much you've grown","Choose your top 3 moments where English felt natural this week","Write a full page: what has improved? What still challenges you?","Record yourself speaking for 2 minutes — any topic. Listen back honestly."], family:"Week 2 celebration — say something specific and encouraging IN ENGLISH to each family member about their progress this week.", vocab:["nuance","pattern","conclusion","reflection","growth"], tip:"Two weeks done. You are no longer a beginner at this system. You are building something real. Keep going." },
+  { week:3, focus:"Natural conversation flow", sentences:["That's an interesting perspective — what led you to think that?","I've been thinking about this differently lately…","That's a fair point, though I'd push back slightly on…","You're speaking to something I've felt but couldn't name.","I wonder if we're looking at the same thing from different angles."], activities:["Have one full conversation in English today — any topic at all","Record a fake podcast episode — you interviewing yourself — 3 minutes","When someone says something today, respond using one of today's sentences","Notice and write down: when do conversations feel easy vs hard in English?"], family:"Family interview game — one person is the 'famous person', others interview them in English. Switch roles every 5 minutes.", vocab:["perspective","naturally","flowing","engage","dialogue"], tip:"Fluency is not about speed. It's about the absence of unnecessary pauses and the presence of natural rhythm." },
+  { week:3, focus:"Professional English", sentences:["My recommendation, based on what I know, would be…","I want to flag this early rather than raise it as a crisis later.","Let me be transparent about where I'm uncertain.","I'd rather be honest with you now than agreeable and unhelpful.","Before we finalise this, has everyone had a chance to push back?"], activities:["Write a professional email in English today — real or practise","Describe your job or daily routine in 8 professional, precise sentences","Practise as if presenting to a room — stand up, speak clearly, confidently","Write 5 sentences you could use in a meeting or work situation"], family:"Ask your kids: what job do you want when you grow up and why? Everyone answers in English. Discuss as a family.", vocab:["recommend","transparent","professional","finalise","present"], tip:"Professional English is not formal English. It is clear, direct, and respectful. Anyone can learn it." },
+  { week:3, focus:"Humour and lightness in English", sentences:["There's something delightfully absurd about this situation.","I'll admit — that's not quite what I expected.","If I'm honest, I find this equal parts fascinating and baffling.","I didn't see that coming — and I should have.","That's either very clever or completely mad — possibly both."], activities:["Tell one joke in English today — any joke at all","Describe something funny that happened this week — in full English sentences","Watch a 5-minute comedy clip in English — try to understand without subtitles","Make your wife laugh — in English. This is a real challenge."], family:"Joke competition — everyone prepares one joke in English. Kids are the judges. Silliest joke wins. This is a real English lesson disguised as pure fun.", vocab:["humour","absurd","unexpected","wit","lighthearted"], tip:"Humour in a language is the final frontier of fluency. When you can make someone laugh in English — you have truly arrived." },
+  { week:3, focus:"Reading and listening deeply", sentences:["The author seems to be arguing that…","What I found most striking about this was…","I'd push back on the assumption that…","This connects to something I've been thinking about, which is…","Reading this made me reconsider my view on…"], activities:["Read one English article — BBC, Guardian, any topic — for 10 focused minutes","Summarise what you read in 5 sentences without looking back at it","Listen to 5 minutes of English radio or podcast — write 3 things you heard","Read one paragraph aloud slowly — focus entirely on clear pronunciation"], family:"Read a short English story aloud together. Each person reads 2 sentences. Stop and explain any word nobody knows. Make it enjoyable.", vocab:["summarise","argument","assumption","comprehend","absorb"], tip:"Reading feeds your vocabulary. Listening trains your ear. Both together rewire your brain faster than any app ever could." },
+  { week:3, focus:"Thinking in English", sentences:["Clarity now saves confusion later.","What does success actually look like here?","Slow is smooth, and smooth is fast.","The right question is often more valuable than a quick answer.","Done is better than perfect — let's move forward."], activities:["For one hour today — try to think only in English. Notice every time you switch.","Narrate your own actions in your head: 'I am making tea. The kettle is boiling.'","Write your entire to-do list in English today","Before any decision today — form your thoughts in English first, then act"], family:"Think-in-English challenge: for 10 minutes at home, everyone thinks and speaks only English. Put a small funny prize on the line.", vocab:["clarity","success","smooth","progress","deliberate"], tip:"The moment you begin to think in English — even slightly — you will know the language is truly becoming yours." },
+  { week:3, focus:"Emotional intelligence in English", sentences:["I don't want to minimise what you're going through.","Thank you for trusting me with that — I don't take it lightly.","I may not fully understand, but I want to.","That must have been genuinely difficult to navigate.","You don't have to have it all figured out. Neither do I."], activities:["Write a kind, genuine message to someone in English today","Tell your wife one thing you appreciate about her — in English — with real feeling","Practise empathy sentences in the mirror — with actual emotion, not just words","Write a letter to yourself — encouraging, honest, in English"], family:"Appreciation circle — each family member says one thing they appreciate about every other person. Full sentences. In English. This one truly matters.", vocab:["empathy","appreciate","understand","support","genuine"], tip:"Emotional intelligence in English is rarer than technical fluency. Master this and people will trust you in any room." },
+  { week:3, focus:"Week 3 review — fluency check", sentences:["I've come a long way, and I can feel it.","The things that once felt unnatural now feel possible.","I'm not where I want to be yet — but I'm not where I was.","Every sentence I've used this month has built something real.","I choose to keep going, even when it's hard."], activities:["Free-write for 10 minutes in English — no stopping, no editing, no correcting","Record your best 2-minute English speech — any topic you genuinely care about","Write: how did you speak in week 1 vs now? What has actually changed?","Share one thing you're proud of from this month — in English — with your family"], family:"Week 3 family reflection — sit together and each person shares ONE English sentence they are proud of saying this month. Celebrate every single one.", vocab:["progress","reflect","proud","journey","continue"], tip:"Three weeks. You have changed. You may not feel it fully yet. But the sentences are there. The habit is forming. Trust the process." },
+  { week:4, focus:"Advanced opinion and analysis", sentences:["I'd argue that the conventional wisdom on this is incomplete.","There's a piece of this I find compelling, and a piece I question.","What's the assumption underlying that idea?","I think we may be talking past each other slightly.","What would have to be true for that to work?"], activities:["Read an opinion article and write your response to it in English","Analyse something — a decision, an event, a news story — in 8 sentences","Debate with yourself: argue both sides of something you genuinely believe","Send a thoughtful, considered voice note or message to someone in English"], family:"Current events chat — pick one simple news story. Explain it to the kids in English. Ask what they think. Discuss as equals.", vocab:["analyse","assumption","conventional","compelling","underlying"], tip:"Analysis is thinking made visible. When you analyse in English, you show the world how your mind works." },
+  { week:4, focus:"Leadership language", sentences:["Let's focus on what we can control.","Let's make sure we leave with clear next steps.","I think we owe it to the process to explore one more option.","Let's be explicit about who's doing what and by when.","The simplest explanation is usually the right one."], activities:["Speak as if you are leading a meeting — practise out loud for 5 minutes","Write 5 instructions to an imaginary team — clear, direct, respectful","Make a decision today and articulate your full reasoning in English","Describe your vision for your family's future — in English — out loud, standing up"], family:"Family planning session in English. What are our goals this month? Who does what? Speak like a real team. Let the kids have a role too.", vocab:["leadership","explicit","vision","direction","accountable"], tip:"Leadership language is not about authority. It is about clarity. Speak clearly enough and people will naturally want to follow." },
+  { week:4, focus:"Vocabulary expansion day", sentences:["The implications of this are far-reaching.","There's an inherent tension between those two ideas.","That's a nuanced position that deserves more attention.","I'd characterise it less as a problem and more as a tradeoff.","The conventional framing misses something important."], activities:["Learn 10 new words today — write them, say them, use them in sentences","Replace weak words with stronger ones: good→excellent, bad→problematic, big→significant","Write one paragraph using your new vocabulary — no simple words allowed","Find one word you've never used before and use it in a real sentence today"], family:"Vocabulary game — say a word, everyone guesses the meaning. Use a dictionary to check. Whoever is closest wins. Kids absolutely love this.", vocab:["nuanced","implications","inherent","characterise","framing"], tip:"Vocabulary is not memorising lists. It is meeting words in context and using them before you feel completely ready." },
+  { week:4, focus:"Pronunciation and rhythm", sentences:["What I find most remarkable about this is…","There's something that doesn't sit quite right with me here.","I've been wrestling with this question for a while now.","Let me stress-test that idea before I commit to it.","The more I think about it, the more I believe…"], activities:["Record yourself and listen — where do you rush? Where do you mumble? Be honest.","Practise each sentence with proper pauses and natural emphasis","Shadow a native English speaker for 5 minutes — copy their exact rhythm and tone","Read a paragraph from any English book — slowly, clearly, and with full confidence"], family:"Reading aloud together — choose a short English story or article. Read it taking turns sentence by sentence. Focus on sounding clear and natural.", vocab:["rhythm","emphasis","pronunciation","clarity","fluency"], tip:"You don't need a perfect accent. You need a clear, confident delivery. That is entirely within your control — starting today." },
+  { week:4, focus:"Your English identity", sentences:["This is who I am becoming.","I communicate with precision and confidence.","I am someone who finds the right words when they matter.","Every day I speak better than the day before.","This is not in my blood — I am putting it there."], activities:["Write your English identity statement — who are you becoming as a communicator?","List 10 moments from the last 30 days where your English made you genuinely proud","Commit to one English habit you will continue beyond Day 30 — write it down","Read your identity statement out loud every morning for the rest of this week"], family:"Tell each family member what you have noticed about their English this month — something specific, something real, something kind and true.", vocab:["identity","commitment","growth","confidence","becoming"], tip:"Identity is the final piece. When you see yourself as someone who speaks English well — you will. It always starts with the story you tell yourself." },
+  { week:4, focus:"Teaching others — the deepest learning", sentences:["The best way I can explain this is…","Let me break this down into simpler terms.","Think of it this way — imagine that…","Does that make sense, or shall I come at it from a different angle?","The key thing to remember here is…"], activities:["Teach your wife or kids one English grammar rule today — in English","Explain something you know well — your job, a hobby — to an imaginary beginner","Write a short 'lesson' in English on any topic you understand deeply","Find one English mistake you used to make — explain out loud why it was wrong"], family:"Kids are the teachers today. Ask each child to teach the family one English word or phrase. Take them completely seriously. Praise them fully.", vocab:["explain","simplify","illustrate","clarify","teach"], tip:"Teaching is the deepest form of learning. The moment you try to explain something in English, every gap in your knowledge reveals itself — and closes." },
+  { week:4, focus:"Reflection and forward momentum", sentences:["I began this knowing less than I do now.","The sentences I once read are now a part of how I think.","I am not finished — I am just getting started.","The habit is built. Now I build the life around it.","Slow is smooth, and smooth is fast."], activities:["Read your very first journal entry from Day 1. Read your most recent. Notice the difference.","Write a letter to yourself 6 months from now — what do you hope to be able to say?","Choose your 20 favourite sentences from all 30 days — these are yours forever","Speak for 5 minutes unscripted about anything. Record it. This is your benchmark."], family:"30-Day celebration dinner. Go around the table. Everyone says their favourite English memory from this month. In English. Honour this journey together.", vocab:["reflect","momentum","milestone","benchmark","forward"], tip:"You did 30 days. Most people never start. You started, stumbled, continued, and arrived. That is the entire story of mastery." }
+];
+
+let state = { completedDays:[], selectedDay:0, checkboxes:{}, learnedVocab:{} };
+try { const s = localStorage.getItem('eng30state'); if(s) state = {...state, ...JSON.parse(s)}; } catch(e){}
+
+function save() { try { localStorage.setItem('eng30state', JSON.stringify(state)); } catch(e){} }
+
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['today','calendar','progress','family'][i]===id));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='today') renderToday();
+  if(id==='calendar') renderCalendar();
+  if(id==='progress') renderProgress();
+  if(id==='family') renderFamily();
+}
+
+function renderToday() {
+  const d = state.selectedDay;
+  const day = DAYS[d];
+  const isCompleted = state.completedDays.includes(d);
+  const wc = ['w1','w2','w3','w4'][day.week-1];
+  const wn = ['Week 1: Foundations','Week 2: Expression','Week 3: Fluency','Week 4: Mastery'][day.week-1];
+  let html = `
+    <div class="nav-row">
+      <div>
+        <div class="day-title">Day ${d+1}</div>
+        <div class="day-subtitle">${day.focus}</div>
+      </div>
+      <div class="nav-arrows">
+        <span class="week-badge ${wc}">${wn}</span>
+        ${d>0?`<button class="btn" onclick="changeDay(${d-1})" style="padding:6px 10px;">&#8592;</button>`:''}
+        ${d<29?`<button class="btn" onclick="changeDay(${d+1})" style="padding:6px 10px;">&#8594;</button>`:''}
+      </div>
+    </div>
+    <div class="tip-box">💡 ${day.tip}</div>
+    <div class="card">
+      <div class="card-title">Today's sentences — practise these</div>
+      <ul class="sentence-list">
+        ${day.sentences.map((s,i)=>`<li><span class="sentence-num">${i+1}</span>${s}</li>`).join('')}
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Daily activities</div>
+      ${day.activities.map((a,i)=>{
+        const key=`${d}-act-${i}`;
+        const done=state.checkboxes[key];
+        return `<div class="activity"><div class="activity-row">
+          <div class="activity-check ${done?'done':''}" onclick="toggleCheck('${key}',this)"></div>
+          <div class="activity-text">${a}</div>
+        </div></div>`;
+      }).join('')}
+    </div>
+    <div class="family-card">
+      <div class="card-title">Family practice today</div>
+      <p style="font-size:14px;color:#085041;line-height:1.7;">${day.family}</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Vocabulary to absorb</div>
+      <div style="padding:4px 0;">
+        ${day.vocab.map(v=>{
+          const vk=`${d}-v-${v}`;
+          const learned=state.learnedVocab[vk];
+          return `<span class="vocab-pill ${learned?'learned':''}" onclick="toggleVocab('${vk}',this)">${v}</span>`;
+        }).join('')}
+      </div>
+      <p style="font-size:12px;color:var(--text-tertiary);margin-top:8px;">Tap a word when you have used it today</p>
+    </div>
+    <button class="complete-day-btn" onclick="completeDay(${d})" ${isCompleted?'disabled':''}>
+      ${isCompleted?'✓ Day '+(d+1)+' Complete!':'Mark Day '+(d+1)+' as Complete'}
+    </button>`;
+  document.getElementById('today').innerHTML = html;
+  updateHeader();
+}
+
+function toggleCheck(key,el) { state.checkboxes[key]=!state.checkboxes[key]; el.classList.toggle('done',state.checkboxes[key]); save(); }
+function toggleVocab(key,el) { state.learnedVocab[key]=!state.learnedVocab[key]; el.classList.toggle('learned',state.learnedVocab[key]); save(); }
+function changeDay(d) { state.selectedDay=d; save(); renderToday(); }
+function completeDay(d) { if(!state.completedDays.includes(d)){state.completedDays.push(d);if(d<29)state.selectedDay=d+1;save();} renderToday(); }
+
+function calcStreak() {
+  if(!state.completedDays.length) return 0;
+  const sorted=[...state.completedDays].sort((a,b)=>a-b);
+  let streak=1, max=1;
+  for(let i=1;i<sorted.length;i++){if(sorted[i]===sorted[i-1]+1)streak++;else streak=1;max=Math.max(max,streak);}
+  return streak;
+}
+
+function updateHeader() {
+  const streak=calcStreak();
+  document.getElementById('streakFlame').textContent=streak>2?'🔥':'✨';
+  document.getElementById('headerSub').textContent=streak>0?`${streak}-day streak — keep going!`:'Your personal daily coach — real English, every day';
+}
+
+function renderCalendar() {
+  const weeks=[[0,1,2,3,4,5,6],[7,8,9,10,11,12,13],[14,15,16,17,18,19,20],[21,22,23,24,25,26,27],[28,29]];
+  const wn=['Week 1: Foundations','Week 2: Expression','Week 3: Fluency','Week 4: Mastery','Final Days'];
+  let html='';
+  weeks.forEach((week,wi)=>{
+    html+=`<div class="week-section"><div class="week-label">${wn[wi]}</div><div class="day-grid">`;
+    week.forEach(d=>{
+      const comp=state.completedDays.includes(d);
+      const sel=state.selectedDay===d;
+      html+=`<button class="day-btn ${comp?'completed':''} ${sel?'selected':''}" onclick="selectDay(${d})">
+        <span>${d+1}</span>${comp?'<span class="tick">✓</span>':''}
+      </button>`;
+    });
+    for(let i=week.length;i<7;i++) html+=`<div></div>`;
+    html+=`</div></div>`;
+  });
+  document.getElementById('calendar').innerHTML=html;
+}
+
+function selectDay(d) { state.selectedDay=d; save(); showTab('today'); }
+
+function renderProgress() {
+  const done=state.completedDays.length;
+  const pct=Math.round(done/30*100);
+  const streak=calcStreak();
+  const vl=Object.values(state.learnedVocab).filter(Boolean).length;
+  const al=Object.values(state.checkboxes).filter(Boolean).length;
+  const wd=[0,1,2,3].map(w=>DAYS.filter((d,i)=>d.week===w+1&&state.completedDays.includes(i)).length);
+  document.getElementById('progress').innerHTML=`
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">${done}</div><div class="stat-label">Days done</div></div>
+      <div class="stat-card"><div class="stat-num">${streak}</div><div class="stat-label">Day streak</div></div>
+      <div class="stat-card"><div class="stat-num">${pct}%</div><div class="stat-label">Complete</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Overall journey</div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary);margin-bottom:4px;"><span>Day 1</span><span>Day 30</span></div>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+      <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">${30-done} days remaining on your journey</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Progress by week</div>
+      ${['Foundations','Expression','Fluency','Mastery'].map((n,i)=>{
+        const p=Math.round(wd[i]/7*100);
+        return `<div style="margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+            <span>Week ${i+1}: ${n}</span><span style="color:var(--text-secondary);">${wd[i]}/7</span>
+          </div>
+          <div class="progress-bar-wrap"><div class="progress-bar" style="width:${p}%"></div></div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num">${vl}</div><div class="stat-label">Words used</div></div>
+      <div class="stat-card"><div class="stat-num">${al}</div><div class="stat-label">Activities done</div></div>
+      <div class="stat-card"><div class="stat-num">${done*5}</div><div class="stat-label">Sentences learned</div></div>
+    </div>
+    <div class="quote-box">
+      <p>"You are not learning English. You are becoming someone who thinks, feels and lives in English."</p>
+      <span>— Your 30-day commitment</span>
+    </div>
+    <button class="btn" onclick="if(confirm('Reset all progress? This cannot be undone.')){state={completedDays:[],selectedDay:0,checkboxes:{},learnedVocab:{}};save();renderProgress();updateHeader();}" style="width:100%;justify-content:center;color:var(--text-secondary);margin-top:0.5rem;">Reset all progress</button>
+  `;
+}
+
+function renderFamily() {
+  document.getElementById('family').innerHTML=`
+    <div class="quote-box">
+      <p>"Your family is not a distraction from your English practice. They are the greatest resource you have."</p>
+    </div>
+    <div class="family-card">
+      <div class="card-title">Why your family changes everything</div>
+      <p style="font-size:14px;color:#085041;line-height:1.7;">Your wife and kids speak good English. That means you have real, live, caring conversation partners available every single day — for free. Most English learners would pay for this. You already have it.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Family practice — weekly plan</div>
+      ${[['Monday','Describe your day to each other in English at dinner — 2 minutes each'],['Tuesday','Vocabulary game — one person says a word, others use it in a sentence'],['Wednesday','Story night — take turns adding one sentence to a shared English story'],['Thursday','Question game — ask interesting questions, answer in full sentences'],['Friday','English film or show — 20 minutes, no subtitles, discuss one scene'],['Saturday','Go out — describe what you see on the journey in English to each other'],['Sunday','Family reflection — each person shares one English moment from the week']].map(([day,act])=>`
+        <div class="activity"><div class="activity-row">
+          <div style="min-width:88px;font-size:13px;font-weight:600;color:var(--text-primary);padding-top:1px;">${day}</div>
+          <div class="activity-text" style="font-size:13px;">${act}</div>
+        </div></div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-title">Golden rules for family English time</div>
+      <ul class="sentence-list">
+        ${['Never correct anyone mid-sentence — let them finish, then model the right version gently','Celebrate every attempt — the trying matters far more than the perfection','Let the kids lead sometimes — their fearless confidence will genuinely inspire you','Make it a game, not a lesson — fun is always faster than pressure','Never laugh AT a mistake — always laugh WITH each other','Keep sessions short — 10 minutes of real engagement beats 1 hour of reluctance','Connect English to things you all already love — food, travel, films, music, sport'].map(r=>`<li><span class="sentence-num">→</span>${r}</li>`).join('')}
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Phrases to use with your family</div>
+      <ul class="sentence-list">
+        ${['"Let\'s say that in English — how would we put it?"','"What\'s the English word for that — does anyone know?"','"Tell me about your day — but in English"','"I want to practise something — can you listen for a moment?"','"That was a great sentence — say it again, just like that"'].map(p=>`<li><span class="sentence-num">★</span>${p}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+showTab('today');
+</script>
+</body>
+</html>
